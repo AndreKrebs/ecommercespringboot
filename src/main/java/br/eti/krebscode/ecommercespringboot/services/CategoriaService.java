@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.eti.krebscode.ecommercespringboot.domain.Categoria;
 import br.eti.krebscode.ecommercespringboot.repositories.CategoriaRepository;
+import br.eti.krebscode.ecommercespringboot.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoriaService {
@@ -21,7 +22,8 @@ public class CategoriaService {
 		Optional<Categoria> objCategoria = categoriaRepository.findById(id);
 		
 		// se não existir o objeto, retorna null
-		return objCategoria.orElse(null);
+		return objCategoria.orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
 		
 	}
 
