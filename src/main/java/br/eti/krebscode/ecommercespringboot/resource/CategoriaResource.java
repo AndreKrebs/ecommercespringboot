@@ -1,32 +1,33 @@
 package br.eti.krebscode.ecommercespringboot.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.eti.krebscode.ecommercespringboot.domain.Categoria;
+import br.eti.krebscode.ecommercespringboot.services.CategoriaService;
 
 @RestController
 @RequestMapping(value="/categorias")
 public class CategoriaResource {
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public List<Categoria> listar() {
+	@Autowired
+	private CategoriaService categoriaServices; 
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	public ResponseEntity<?> listar(@PathVariable Integer id) {
 		
-		Categoria cat1 = new Categoria(1, "Informática");
-		Categoria cat2 = new Categoria(2, "Escritório");
+		Categoria obj = categoriaServices.buscar(id);
 		
-		// List é uma interface, por isso não pode ser instanciada
-		// por isso é usado ArrayList pois ele implementa List
-		List<Categoria> lista = new ArrayList<>();
+		return ResponseEntity.ok().body(obj);
 		
-		lista.add(cat1);
-		lista.add(cat2);
+		/*Categoria cat1 = new Categoria(1, "Informática");
+		Categoria cat2 = new Categoria(2, "Escritório"); */
 		
-		return lista;
+		
 	}
 
 }
