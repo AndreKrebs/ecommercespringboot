@@ -13,6 +13,7 @@ import br.eti.krebscode.ecommercespringboot.domain.Cidade;
 import br.eti.krebscode.ecommercespringboot.domain.Cliente;
 import br.eti.krebscode.ecommercespringboot.domain.Endereco;
 import br.eti.krebscode.ecommercespringboot.domain.Estado;
+import br.eti.krebscode.ecommercespringboot.domain.ItemPedido;
 import br.eti.krebscode.ecommercespringboot.domain.Pagamento;
 import br.eti.krebscode.ecommercespringboot.domain.PagamentoComBoleto;
 import br.eti.krebscode.ecommercespringboot.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import br.eti.krebscode.ecommercespringboot.repositories.CidadeRepository;
 import br.eti.krebscode.ecommercespringboot.repositories.ClienteRepository;
 import br.eti.krebscode.ecommercespringboot.repositories.EnderecoRepository;
 import br.eti.krebscode.ecommercespringboot.repositories.EstadoRepository;
+import br.eti.krebscode.ecommercespringboot.repositories.ItemPedidoRepository;
 import br.eti.krebscode.ecommercespringboot.repositories.PagamentoRepository;
 import br.eti.krebscode.ecommercespringboot.repositories.PedidoRepository;
 import br.eti.krebscode.ecommercespringboot.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class EcommercespringbootApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	
 	public static void main(String[] args) {
@@ -111,6 +116,17 @@ public class EcommercespringbootApplication implements CommandLineRunner {
 		est1.getCidades().addAll(Arrays.asList(cid1));
 		est2.getCidades().addAll(Arrays.asList(cid2, cid3));
 		
+		ItemPedido itemPed1 = new ItemPedido(ped1, p1, 1, 2000.00, 0D);
+		ItemPedido itemPed2 = new ItemPedido(ped1, p3, 2, 80.00, 0D);
+		ItemPedido itemPed3 = new ItemPedido(ped2, p2, 1, 800.00, 100D);
+		
+		ped1.getItens().addAll(Arrays.asList(itemPed1, itemPed3));
+		ped1.getItens().addAll(Arrays.asList(itemPed2));
+		
+		p1.getItens().add(itemPed1);
+		p2.getItens().add(itemPed2);
+		p3.getItens().add(itemPed3);
+		
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
 		
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
@@ -126,5 +142,7 @@ public class EcommercespringbootApplication implements CommandLineRunner {
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		
 		pagamentoRepository.saveAll(Arrays.asList(pag1, pag2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(itemPed1, itemPed2, itemPed3));
 	}
 }
