@@ -25,15 +25,15 @@ public class CategoriaResource {
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> listar(@PathVariable Integer id) {
 		
-		Categoria obj = categoriaServices.buscar(id);
+		Categoria obj = categoriaServices.find(id);
 		
 		return ResponseEntity.ok().body(obj);
 				
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> inserir(@RequestBody Categoria obj) {
-		obj = categoriaServices.inserir(obj);
+	public ResponseEntity<Categoria> insert(@RequestBody Categoria obj) {
+		obj = categoriaServices.insert(obj);
 		
 		// url que vai ser retornada para o cliente com o /id
 		URI uri = ServletUriComponentsBuilder
@@ -44,4 +44,11 @@ public class CategoriaResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id) {
+		obj = categoriaServices.update(obj);
+		
+		return ResponseEntity.noContent().build();
+	}
+	
 }

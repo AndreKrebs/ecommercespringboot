@@ -15,7 +15,7 @@ public class CategoriaService {
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 	
-	public Categoria buscar(Integer id) {
+	public Categoria find(Integer id) {
 		
 		// Optionar é usado em vez de usar apenas Categoria pois isso evita 
 		// erro de nullPointException
@@ -28,7 +28,17 @@ public class CategoriaService {
 		
 	}
 
-	public Categoria inserir(Categoria obj) {
+	public Categoria insert(Categoria obj) {
+		if(obj.getId() == null) {
+			return categoriaRepository.save(obj);
+		}
+		return null;
+	}
+	
+	public Categoria update(Categoria obj) {
+		find(obj.getId()); // aproveita o find por causa do tratamento
+		
 		return categoriaRepository.save(obj);
+		
 	}
 }

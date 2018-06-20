@@ -15,7 +15,7 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
-	public Cliente buscar(Integer id) {
+	public Cliente find(Integer id) {
 		
 		// Optionar é usado em vez de usar apenas Cliente pois isso evita 
 		// erro de nullPointException

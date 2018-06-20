@@ -15,7 +15,7 @@ public class PedidoService {
 	@Autowired
 	private PedidoRepository pedidoRepository;
 	
-	public Pedido buscar(Integer id) {
+	public Pedido find(Integer id) {
 		
 		// Optionar é usado em vez de usar apenas Pedido pois isso evita 
 		// erro de nullPointException
