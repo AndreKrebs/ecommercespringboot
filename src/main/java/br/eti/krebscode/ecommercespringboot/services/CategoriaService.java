@@ -3,10 +3,12 @@ package br.eti.krebscode.ecommercespringboot.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.eti.krebscode.ecommercespringboot.domain.Categoria;
 import br.eti.krebscode.ecommercespringboot.repositories.CategoriaRepository;
+import br.eti.krebscode.ecommercespringboot.services.exceptions.DataIntegrivityException;
 import br.eti.krebscode.ecommercespringboot.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -39,6 +41,16 @@ public class CategoriaService {
 		find(obj.getId()); // aproveita o find por causa do tratamento
 		
 		return categoriaRepository.save(obj);
-		
 	}
+	
+	public void delete(Integer id) {
+		find(id);
+				
+		try {
+			categoriaRepository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			 throw new DataIntegrivityException("Não é possivel excluir uma categoria que possui produtos");
+		}
+	}
+	
 }
