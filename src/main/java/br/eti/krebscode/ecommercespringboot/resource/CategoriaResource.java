@@ -1,6 +1,8 @@
 package br.eti.krebscode.ecommercespringboot.resource;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.eti.krebscode.ecommercespringboot.domain.Categoria;
+import br.eti.krebscode.ecommercespringboot.dto.CategoriaDTO;
 import br.eti.krebscode.ecommercespringboot.services.CategoriaService;
 
 @RestController
@@ -55,6 +58,19 @@ public class CategoriaResource {
 		categoriaServices.delete(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		
+		List<Categoria> list = categoriaServices.findAll();
+		
+		// transforma lista Categoria em uma lista CategoriaDTO
+		List<CategoriaDTO> listDTO = list.stream()
+				.map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList()); 
+		
+		return ResponseEntity.ok().body(listDTO);
+				
 	}
 	
 }
