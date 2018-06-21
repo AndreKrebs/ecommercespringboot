@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.eti.krebscode.ecommercespringboot.domain.Categoria;
+import br.eti.krebscode.ecommercespringboot.dto.CategoriaDTO;
 import br.eti.krebscode.ecommercespringboot.repositories.CategoriaRepository;
 import br.eti.krebscode.ecommercespringboot.services.exceptions.DataIntegrivityException;
 import br.eti.krebscode.ecommercespringboot.services.exceptions.ObjectNotFoundException;
@@ -67,4 +68,9 @@ public class CategoriaService {
 		return categoriaRepository.findAll(pageRequest);
 	}
 	
+	
+	public Categoria fromDto(CategoriaDTO objDto) {
+		return new Categoria(objDto.getId(), objDto.getNome());
+		
+	}
 }
