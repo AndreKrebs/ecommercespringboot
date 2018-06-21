@@ -71,6 +71,15 @@ public class EcommercespringbootApplication implements CommandLineRunner {
 	
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
+		Categoria cat3 = new Categoria(null, "Eletrônicos");
+		Categoria cat4 = new Categoria(null, "Jogos pc");
+		Categoria cat5 = new Categoria(null, "Drones");
+		Categoria cat6 = new Categoria(null, "Celulares");
+		Categoria cat7 = new Categoria(null, "Refrigeração");
+		Categoria cat8 = new Categoria(null, "Componentes");
+		Categoria cat9 = new Categoria(null, "Redes");
+		Categoria cat10 = new Categoria(null, "Arduinos");
+		Categoria cat11 = new Categoria(null, "Raspberry Pi");
 		
 		Produto p1 = new Produto(null, "Computador", 2000.00);
 		Produto p2 = new Produto(null, "Impressora", 800.00);
@@ -127,7 +136,7 @@ public class EcommercespringbootApplication implements CommandLineRunner {
 		p2.getItens().add(itemPed2);
 		p3.getItens().add(itemPed3);
 		
-		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
+		categoriaRepository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9, cat10, cat11));
 		
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
 		
