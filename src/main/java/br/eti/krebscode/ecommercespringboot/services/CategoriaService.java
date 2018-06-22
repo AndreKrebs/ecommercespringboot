@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.eti.krebscode.ecommercespringboot.domain.Categoria;
+import br.eti.krebscode.ecommercespringboot.domain.Cliente;
 import br.eti.krebscode.ecommercespringboot.dto.CategoriaDTO;
 import br.eti.krebscode.ecommercespringboot.repositories.CategoriaRepository;
 import br.eti.krebscode.ecommercespringboot.services.exceptions.DataIntegrivityException;
@@ -43,8 +44,8 @@ public class CategoriaService {
 	}
 	
 	public Categoria update(Categoria obj) {
-		find(obj.getId()); // aproveita o find por causa do tratamento
-		
+		Categoria newObj = find(obj.getId()); // aproveita o find por causa do tratamento
+		updateData(newObj, obj); 
 		return categoriaRepository.save(obj);
 	}
 	
@@ -73,4 +74,9 @@ public class CategoriaService {
 		return new Categoria(objDto.getId(), objDto.getNome());
 		
 	}
+	
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setNome(obj.getNome());
+	}
+	
 }
