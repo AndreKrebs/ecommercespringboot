@@ -59,7 +59,7 @@ public class CategoriaResource {
 		
 		// seta o id para poder fazer o update
 		obj.setId(id);
-		obj = categoriaServices.update(obj);
+		categoriaServices.update(obj);
 		
 		return ResponseEntity.noContent().build();
 	}

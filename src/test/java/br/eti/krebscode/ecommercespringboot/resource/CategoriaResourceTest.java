@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.eti.krebscode.ecommercespringboot.EcommercespringbootApplication;
 import br.eti.krebscode.ecommercespringboot.domain.Categoria;
@@ -78,6 +80,7 @@ public class CategoriaResourceTest {
     }
 	
 	@Test
+	@Transactional
 	public void createCategoria() throws Exception{
 		int databaseSizeBeforeCreate = categoriaRepository.findAll().size();
 		
@@ -98,6 +101,7 @@ public class CategoriaResourceTest {
 	}
 	
 	@Test
+	@Transactional
 	public void getAllCategorias() throws Exception {
 		categoriaRepository.saveAndFlush(categoria);
 		
@@ -106,8 +110,60 @@ public class CategoriaResourceTest {
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(
 				MediaType.APPLICATION_JSON_UTF8_VALUE))
-		.andExpect(jsonPath("$.[*].id").value(hasItem(categoria.getId().intValue())))
-		.andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
+		.andExpect(jsonPath("$.[*].id").value(hasItem(categoria.getId())))
+		.andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)));
+	}
+	
+	@Test
+	@Transactional
+	public void getCategoria() throws Exception {
+		categoriaRepository.saveAndFlush(categoria);
+		
+		// testa retorno da consulta
+		restCategoriaMockMvc.perform(get("/categorias/{id}", categoria.getId()))
+		.andExpect(status().isOk())
+		.andExpect(content().contentType(
+				MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$.id").value(categoria.getId()))
+		.andExpect(jsonPath("$.nome").value(DEFAULT_NOME));
+
+	}
+
+	@Test
+    @Transactional
+    public void getNonExistingCompany() throws Exception {
+        // busca por uma categoria
+		restCategoriaMockMvc.perform(get("/categorias/{id}", Long.MAX_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+	
+	@Test
+    @Transactional
+    public void updateCategoria() throws Exception {
+		categoriaRepository.saveAndFlush(categoria);		
+		int databaseSizeBeforeUpdate = categoriaRepository.findAll().size();
+		
+		Categoria objCategoria = categoriaRepository.findById(categoria.getId()).orElse(null);
+		
+		// valida se não esta nulo
+		assertThat(objCategoria).isNotNull();		
+		
+		// faz update
+		objCategoria.setNome(UPDATED_NOME);
+		
+		restCategoriaMockMvc.perform(put("/categorias/{id}", objCategoria.getId())
+		.contentType(TestUtil.APPLICATION_JSON_UTF8)
+        .content(TestUtil.convertObjectToJsonBytes(objCategoria)))
+		.andExpect(status().isNoContent()); // 204 - não retorna dados
+		
+		// valida se Categoria esta na lista
+		List<Categoria> categoriaList = categoriaRepository.findAll();
+        assertThat(categoriaList).hasSize(databaseSizeBeforeUpdate);
+        Categoria testCategoria = categoriaList.get(categoriaList.size() - 1);
+        assertThat(testCategoria.getNome()).isNotEqualTo(DEFAULT_NOME);
+        assertThat(testCategoria.getNome()).isEqualTo(UPDATED_NOME);
+        
+		
 	}
 	
 }
