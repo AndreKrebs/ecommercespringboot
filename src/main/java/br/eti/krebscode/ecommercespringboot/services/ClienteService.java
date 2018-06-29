@@ -10,9 +10,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.eti.krebscode.ecommercespringboot.domain.Cidade;
 import br.eti.krebscode.ecommercespringboot.domain.Cliente;
+import br.eti.krebscode.ecommercespringboot.domain.Endereco;
+import br.eti.krebscode.ecommercespringboot.domain.enums.TipoCliente;
 import br.eti.krebscode.ecommercespringboot.dto.ClienteDTO;
+import br.eti.krebscode.ecommercespringboot.dto.ClienteNewDTO;
+import br.eti.krebscode.ecommercespringboot.repositories.CidadeRepository;
 import br.eti.krebscode.ecommercespringboot.repositories.ClienteRepository;
+import br.eti.krebscode.ecommercespringboot.repositories.EnderecoRepository;
 import br.eti.krebscode.ecommercespringboot.services.exceptions.DataIntegrivityException;
 import br.eti.krebscode.ecommercespringboot.services.exceptions.ObjectNotFoundException;
 
@@ -21,6 +27,12 @@ public class ClienteService {
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	public Cliente find(Integer id) {
 		
@@ -34,6 +46,15 @@ public class ClienteService {
 		
 	}
 	
+	public Cliente insert(Cliente obj) {
+		if(obj.getId() == null) {
+			obj = clienteRepository.save(obj);
+			enderecoRepository.saveAll(obj.getEnderecos());
+			return obj;
+		}
+		return null;
+	}
+	
 	public Cliente update(Cliente obj) {
 		Cliente newObj = find(obj.getId()); // aproveita o find por causa do tratamento
 		
@@ -41,6 +62,7 @@ public class ClienteService {
 		
 		return clienteRepository.save(newObj);
 	}
+	
 	
 	public void delete(Integer id) {
 		find(id);
@@ -66,6 +88,25 @@ public class ClienteService {
 	public Cliente fromDto(ClienteDTO objDto) {
 		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
 		
+	}
+	
+	public Cliente fromDto(ClienteNewDTO objNewDto) {
+		Cliente cliente = new Cliente(null, objNewDto.getNome(), objNewDto.getEmail(), objNewDto.getCpfOuCnpj(), TipoCliente.toEnum(objNewDto.getTipo()));
+		Optional<Cidade> cidade = cidadeRepository.findById(objNewDto.getCidadeId());
+		Endereco endereco = new Endereco(null, objNewDto.getLogradouro(), objNewDto.getNumero(), objNewDto.getComplemento(), objNewDto.getBairro(), objNewDto.getCep(), cliente, cidade.get());
+		
+		cliente.getEnderecos().add(endereco);
+		cliente.getTelefones().add(objNewDto.getTelefone1());
+		
+		if(objNewDto.getTelefone2() != null) {
+			cliente.getTelefones().add(objNewDto.getTelefone2());
+		}
+		
+		if(objNewDto.getTelefone3() != null) {
+			cliente.getTelefones().add(objNewDto.getTelefone3());
+		}
+		
+		return cliente;
 	}
 	
 	private void updateData(Cliente newObj, Cliente obj) {

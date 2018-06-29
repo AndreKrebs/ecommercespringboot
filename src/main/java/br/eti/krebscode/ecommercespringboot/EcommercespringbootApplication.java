@@ -32,9 +32,9 @@ import br.eti.krebscode.ecommercespringboot.repositories.PedidoRepository;
 import br.eti.krebscode.ecommercespringboot.repositories.ProdutoRepository;
 
 @SpringBootApplication
-public class EcommercespringbootApplication { //implements CommandLineRunner {
+public class EcommercespringbootApplication implements CommandLineRunner {
 
-	/*@Autowired
+	@Autowired
 	private CategoriaRepository categoriaRepository;
 	
 	@Autowired
@@ -59,14 +59,14 @@ public class EcommercespringbootApplication { //implements CommandLineRunner {
 	private PagamentoRepository pagamentoRepository;
 	
 	@Autowired
-	private ItemPedidoRepository itemPedidoRepository;*/
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(EcommercespringbootApplication.class, args);
 	}
 
-	/*@Override
+	@Override
 	public void run(String... args) throws Exception {
 	
 		Categoria cat1 = new Categoria(null, "Informática");
@@ -153,5 +153,5 @@ public class EcommercespringbootApplication { //implements CommandLineRunner {
 		pagamentoRepository.saveAll(Arrays.asList(pag1, pag2));
 		
 		itemPedidoRepository.saveAll(Arrays.asList(itemPed1, itemPed2, itemPed3));
-	}*/
+	}
 }
