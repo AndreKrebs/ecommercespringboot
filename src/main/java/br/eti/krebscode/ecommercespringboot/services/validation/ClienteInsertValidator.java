@@ -6,14 +6,21 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import br.eti.krebscode.ecommercespringboot.domain.Cliente;
 import br.eti.krebscode.ecommercespringboot.domain.enums.TipoCliente;
 import br.eti.krebscode.ecommercespringboot.dto.ClienteNewDTO;
+import br.eti.krebscode.ecommercespringboot.repositories.ClienteRepository;
 import br.eti.krebscode.ecommercespringboot.resource.exceptions.FieldMessage;
 import br.eti.krebscode.ecommercespringboot.services.validation.utils.BR;
 
 public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
-	@Override
 
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Override
 	public void initialize(ClienteInsert ann) {
 	}
 
@@ -28,6 +35,10 @@ public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert
 			list.add(new FieldMessage("cpfOuCnpj", "CPNJ inválido"));
 		}
 		
+		Cliente aux = clienteRepository.findByEmail(objDto.getEmail());
+		if(aux != null) {
+			list.add(new FieldMessage("email", "Email já existe"));
+		}
 		
 		for (FieldMessage e : list) {
 			context.disableDefaultConstraintViolation();
