@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.eti.krebscode.ecommercespringboot.domain.Categoria;
 import br.eti.krebscode.ecommercespringboot.domain.Cidade;
@@ -34,6 +35,9 @@ import br.eti.krebscode.ecommercespringboot.repositories.ProdutoRepository;
 @SpringBootApplication
 public class EcommercespringbootApplication implements CommandLineRunner {
 
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 	
@@ -93,7 +97,7 @@ public class EcommercespringbootApplication implements CommandLineRunner {
 		Cidade cid3 = new Cidade(null, "Campinas", est2);
 		
 		
-		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "254154788", TipoCliente.PESSOAFISICA);
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "254154788", TipoCliente.PESSOAFISICA, passwordEncoder.encode("1234"));
 		cli1.getTelefones().addAll(Arrays.asList("3524-5878", "3335-7500"));
 		
 		Endereco end1 = new Endereco(null, "Rua Flores", "1234", "casa 1", "Jardim", "88880-444", cli1, cid1);

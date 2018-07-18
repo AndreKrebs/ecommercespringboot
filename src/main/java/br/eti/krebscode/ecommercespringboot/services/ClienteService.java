@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.eti.krebscode.ecommercespringboot.domain.Cidade;
@@ -24,6 +25,9 @@ import br.eti.krebscode.ecommercespringboot.services.exceptions.ObjectNotFoundEx
 
 @Service
 public class ClienteService {
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
@@ -86,12 +90,12 @@ public class ClienteService {
 	
 	
 	public Cliente fromDto(ClienteDTO objDto) {
-		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
+		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null, null);
 		
 	}
 	
 	public Cliente fromDto(ClienteNewDTO objNewDto) {
-		Cliente cliente = new Cliente(null, objNewDto.getNome(), objNewDto.getEmail(), objNewDto.getCpfOuCnpj(), TipoCliente.toEnum(objNewDto.getTipo()));
+		Cliente cliente = new Cliente(null, objNewDto.getNome(), objNewDto.getEmail(), objNewDto.getCpfOuCnpj(), TipoCliente.toEnum(objNewDto.getTipo()), passwordEncoder.encode(objNewDto.getSenha()));
 		Optional<Cidade> cidade = cidadeRepository.findById(objNewDto.getCidadeId());
 		Endereco endereco = new Endereco(null, objNewDto.getLogradouro(), objNewDto.getNumero(), objNewDto.getComplemento(), objNewDto.getBairro(), objNewDto.getCep(), cliente, cidade.get());
 		
