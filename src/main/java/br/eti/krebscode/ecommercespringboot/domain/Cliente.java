@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +20,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.eti.krebscode.ecommercespringboot.domain.enums.Perfil;
 import br.eti.krebscode.ecommercespringboot.domain.enums.TipoCliente;
 
 @Entity
@@ -41,6 +44,10 @@ public class Cliente implements Serializable{
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL) // ação em cascata para todas as ações
 	private List<Endereco> enderecos = new ArrayList<>();
 	
+	@ElementCollection(fetch=FetchType.EAGER) // para retornar informação junto com os dados do cliente
+	@CollectionTable(name="PERFIS")
+	private Set<Integer> perfis = new HashSet<>();
+	
 	@ElementCollection
 	@CollectionTable(name="TELEFONE")
 	private Set<String> telefones = new HashSet<>();
@@ -50,7 +57,7 @@ public class Cliente implements Serializable{
 	private List<Pedido> pedidos = new ArrayList<>();
 	
 	public Cliente() {
-		
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
@@ -61,6 +68,7 @@ public class Cliente implements Serializable{
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = tipo == null ? null: tipo.getCod();
 		this.senha = senha;
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	public Integer getId() {
@@ -127,6 +135,10 @@ public class Cliente implements Serializable{
 		this.telefones = telefones;
 	}
 
+	public Set<Perfil> getPerfis() {
+		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+	}
+
 	public List<Pedido> getPedidos() {
 		return pedidos;
 	}
@@ -135,6 +147,10 @@ public class Cliente implements Serializable{
 		this.pedidos = pedidos;
 	}
 		
+	public void addPerfil(Perfil perfil) {
+		perfis.add(perfil.getCod());
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

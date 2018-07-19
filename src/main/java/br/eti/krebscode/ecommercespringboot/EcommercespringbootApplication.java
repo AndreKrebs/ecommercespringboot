@@ -100,6 +100,8 @@ public class EcommercespringbootApplication implements CommandLineRunner {
 		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "254154788", TipoCliente.PESSOAFISICA, passwordEncoder.encode("1234"));
 		cli1.getTelefones().addAll(Arrays.asList("3524-5878", "3335-7500"));
 		
+//		TODO: Adicionar cliente com perfil de ADMIN
+		
 		Endereco end1 = new Endereco(null, "Rua Flores", "1234", "casa 1", "Jardim", "88880-444", cli1, cid1);
 		Endereco end2 = new Endereco(null, "Avenida Matos", "756", "apto 32", "Centro", "88880-444", cli1, cid2);
 		

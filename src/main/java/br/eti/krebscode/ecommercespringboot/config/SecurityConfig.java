@@ -31,14 +31,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private static final String[] PUBLIC_MATCHERS_GET = {
 			"/produtos/**",
-			"/categorias/**"
+			"/categorias/**",
+			"/estados/**",
+			"/clientes/**"
 	};
 	
 	@Override
 	protected void configure (HttpSecurity http) throws Exception {
 		
 		// validação para poder acessar o h2 no browser
-		if(Arrays.asList(env.getActiveProfiles()).contains("test")) {
+		if(Arrays.asList(env.getActiveProfiles()).contains("dev")) {
 			http.headers().frameOptions().disable();
 		}
 		
